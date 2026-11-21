@@ -1,0 +1,65 @@
+SOFTWARE REQUIREMENTS SPECIFICATION (SRS)
+Movies Dataset Cleaning and Exploratory Data Analysis (EDA)
+
+Project Title	Movies Dataset Cleaning and Exploratory Data Analysis (EDA)
+Submitted By	[Your Name]
+Roll Number	[Your Roll Number]
+Platform / Environment	Google Colaboratory (Python 3)
+Dataset	movies.csv (extracted from movies.csv.zip)
+Output Artifact	new_movies_clean.csv
+1. Introduction
+1.1 Purpose
+The purpose of this project is to ingest, inspect, clean, and perform descriptive exploratory data analysis (EDA) on a raw movies dataset (movies.csv). The workflow prepares raw tabular movie data for downstream analytics by identifying missing values, removing low-variance columns, verifying duplicates, optimizing column data types, and exporting a cleaned CSV file.
+1.2 Scope
+The system processes a compressed dataset (movies.csv.zip) containing 4,803 movie records across 24 attributes (including budget, genres, revenue, runtime, vote_average, cast, crew, and director). The final deliverables include a cleaned dataset (new_movies_clean.csv) and statistical insights covering movie budgets, revenues, genres, dominant languages, and directors.
+1.3 Definitions & Abbreviations
+•	CSV: Comma-Separated Values file format used for storing tabular data.
+•	EDA: Exploratory Data Analysis — inspecting and summarizing dataset characteristics.
+•	DataFrame (df): Two-dimensional labeled tabular data structure provided by the pandas library.
+•	Null / NaN: Missing or undefined data values within dataset fields.
+2. Overall Description
+2.1 Product Perspective
+This project is a standalone data analytics workflow implemented as a Python notebook in Google Colaboratory. It operates directly on uploaded CSV files using standard Python data science libraries without requiring an external database server or web frontend.
+2.2 Hardware & Software Requirements
+•	Execution Environment: Google Colaboratory (cloud-hosted Jupyter Notebook runtime).
+•	Programming Language: Python 3.
+•	pandas: Data loading, inspection, cleaning, transformation, and statistical analysis.
+•	numpy: Numerical array operations and numeric type support.
+•	zipfile: Extracting movies.csv directly from the uploaded movies.csv.zip archive.
+•	google.colab.files: Uploading local dataset files into the Colab runtime session.
+3. Functional Requirements
+3.1 Data Ingestion
+•	FR-1 (File Upload): The system shall allow the user to upload movies.csv.zip via Google Colab's file upload widget.
+•	FR-2 (Archive Extraction & Loading): The system shall extract movies.csv from the ZIP archive using zipfile.ZipFile and load it into a pandas DataFrame (df) via pd.read_csv().
+3.2 Data Exploration & Profiling
+•	FR-3 (Structural Inspection): The system shall inspect dataset dimensions (df.shape — 4,803 rows, 24 columns), column names (df.columns), and data types/non-null counts (df.info(), df.dtypes).
+•	FR-4 (Data Preview & Slicing): The system shall preview records using df.head(), df.tail(), df.sample(5, random_state=42), and label-based row selection (df.loc[2:7]).
+•	FR-5 (Statistical Profiling): The system shall compute summary statistics for numerical and categorical columns via df.describe() and df.describe(include='all'), genre frequency counts via value_counts(), and unique budget values via unique().
+3.3 Data Cleaning & Preprocessing
+•	FR-6 (Missing Value Detection): The system shall calculate missing value counts per column using df.isnull().sum() and df.isna().sum().
+•	FR-7 (Imputation): The system shall compute central tendency statistics (mean, median, mode) and apply mode imputation using fillna().
+•	FR-8 (Duplicate Verification): The system shall check for exact duplicate rows using df.duplicated().sum() and enforce uniqueness via df.drop_duplicates(keep='first').
+•	FR-9 (Column Reduction): The system shall drop unnecessary/low-variance columns — permanently removing status with inplace=True (alongside index removal, reducing columns from 24 to 22) and verifying temporary exclusion of revenue.
+•	FR-10 (Data Type Optimization): The system shall convert the production_countries column from object to category data type using astype('category') to reduce memory usage.
+3.4 Data Export
+•	FR-11 (Export Cleaned Dataset): The system shall export the cleaned DataFrame to a CSV file named new_movies_clean.csv using df.to_csv().
+4. Non-Functional Requirements
+•	Performance & Memory Efficiency: Converting repetitive string columns (production_countries) to the category dtype optimizes memory consumption (baseline DataFrame memory footprint: ~900.7 KB).
+•	Reproducibility: Random data sampling specifies a fixed seed (random_state=42) to ensure consistent outputs across executions.
+•	Modularity & Usability: Notebook cells are structured sequentially (Upload -> Load -> Explore -> Clean -> Export) for transparent verification and viva demonstration.
+5. Key Analysis & Results Summary
+The table below summarizes the primary data quality observations and descriptive statistical findings extracted from the movies dataset during Exploratory Data Analysis:
+Metric / Observation	Finding from Dataset
+Total Records	4,803 movies; 24 initial columns reduced to 22 cleaned columns
+Duplicate Rows	0 exact duplicates detected
+Highest Missing Values	homepage (3,091), tagline (844), keywords (412), cast (43), director (30), genres (28)
+Budget	Mean: ~$29.05M | Max: $380M | Min: $0 (unrecorded budget values)
+Revenue	Mean: ~$82.26M | Max: ~$2.79B
+Runtime	Mean: 106.88 minutes | Max: 338 minutes
+Vote Average	Mean: 6.09 / 10 (Median: 6.2 | Max: 10.0)
+Top Genres	Drama (370 movies), Comedy (282), Drama Romance (164)
+Dominant Language	English (en) — 4,505 out of 4,803 movies
+Top Director	Steven Spielberg (27 movies)
+Release Status	4,795 of 4,803 movies marked 'Released' (low variance -> column dropped)
+6. Conclusion
+This project demonstrates a complete, reproducible data cleaning and exploratory analysis pipeline in Python. By systematically profiling the raw movies dataset, auditing missing values and duplicates, removing redundant attributes, and optimizing data types, the workflow produces a clean, analysis-ready CSV dataset alongside clear statistical insights for reporting and viva evaluation.
